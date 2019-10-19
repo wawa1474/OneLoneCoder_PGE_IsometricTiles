@@ -3,6 +3,7 @@ color BLUE = color(0, 0, 255);
 color GREEN = color(0, 255, 0);
 color YELLOW = color(255, 255, 0);
 color WHITE = color(255);
+color BLACK = color(0);
 
 
 PVectorI vWorldSize = new PVectorI(14, 10);
@@ -122,8 +123,6 @@ void draw(){
   tmp = createImage(vTileSize.x, vTileSize.y, ARGB);
   tmp.copy(sprIsom, 0, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
   image(tmp, vSelectedWorld.x, vSelectedWorld.y);
-  
-  popMatrix();
 
   // Go back to normal drawing with no expected transparency
   //SetPixelMode(olc::Pixel::NORMAL);
@@ -132,9 +131,12 @@ void draw(){
   //DrawRect(vCell.x * vTileSize.x, vCell.y * vTileSize.y, vTileSize.x, vTileSize.y, olc::RED);
       
   // Draw Debug Info
-  //DrawString(4, 4, "Mouse   : " + std::to_string(vMouse.x) + ", " + std::to_string(vMouse.y), olc::BLACK);
-  //DrawString(4, 14, "Cell    : " + std::to_string(vCell.x) + ", " + std::to_string(vCell.y), olc::BLACK);
-  //DrawString(4, 24, "Selected: " + std::to_string(vSelected.x) + ", " + std::to_string(vSelected.y), olc::BLACK);
+  fill(BLACK);
+  text("Mouse   : " + str(vMouse.x) + ", " + str(vMouse.y), 4, 10);
+  text("Cell    : " + str(vCell.x) + ", " + str(vCell.y), 4, 20);
+  text("Selected: " + str(vSelected.x) + ", " + str(vSelected.y), 4, 30);
+  
+  popMatrix();
 }
 
 // Labmda function to convert "world" coordinate into screen space
