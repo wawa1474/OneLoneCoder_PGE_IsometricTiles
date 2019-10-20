@@ -14,6 +14,8 @@ PImage tmp;
 int[] pWorld = new int[vWorldSize.x * vWorldSize.y];
 PImage sprIsom;
 
+boolean selectedBehind = false;//is the selection cursor shown behind other tiles
+
 void setup(){
   //size(512, 480);
   size(1024, 960);
@@ -109,6 +111,12 @@ void draw(){
         break;
       }
       image(tmp, vWorld.x, tmpY);
+      
+      if(selectedBehind == true && vSelected.x == x && vSelected.y == y){
+        tmp = createImage(vTileSize.x, vTileSize.y, ARGB);
+        tmp.copy(sprIsom, 0, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
+        image(tmp, vWorld.x, vWorld.y);
+      }
     }
   }
 
@@ -120,9 +128,11 @@ void draw(){
 
   // Draw "highlight" tile
   //DrawPartialSprite(vSelectedWorld.x, vSelectedWorld.y, sprIsom, 0 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
-  tmp = createImage(vTileSize.x, vTileSize.y, ARGB);
-  tmp.copy(sprIsom, 0, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
-  image(tmp, vSelectedWorld.x, vSelectedWorld.y);
+  if(selectedBehind == false){
+    tmp = createImage(vTileSize.x, vTileSize.y, ARGB);
+    tmp.copy(sprIsom, 0, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
+    image(tmp, vSelectedWorld.x, vSelectedWorld.y);
+  }
 
   // Go back to normal drawing with no expected transparency
   //SetPixelMode(olc::Pixel::NORMAL);
