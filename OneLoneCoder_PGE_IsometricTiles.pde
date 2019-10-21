@@ -10,6 +10,9 @@ PVectorI vWorldSize = new PVectorI(14, 10);
 PVectorI vTileSize = new PVectorI(40, 20);
 PVectorI vOrigin = new PVectorI(5, 1);
 PVectorI vSelected;
+PImage[] tiles;
+int tileWidth = 40;
+int tileHeight = 40;
 PImage tmp;
 int[] pWorld = new int[vWorldSize.x * vWorldSize.y];
 PImage sprIsom;
@@ -19,7 +22,8 @@ boolean selectedBehind = false;//is the selection cursor shown behind other tile
 void setup(){
   //size(512, 480);
   size(1024, 960);
-  sprIsom = loadImage("isometric_demo.png");
+  sprIsom = loadImage("isometric_demo2.png");
+  tiles = splitTiles2(sprIsom);
 }
 
 void draw(){
@@ -40,7 +44,8 @@ void draw(){
   PVectorI vOffset = new PVectorI(vMouse.x % vTileSize.x, vMouse.y % vTileSize.y);
 
   // Sample into cell offset colour
-  color col = sprIsom.get(3 * vTileSize.x + vOffset.x, vOffset.y);
+  //color col = sprIsom.get(3 * vTileSize.x + vOffset.x, vOffset.y);
+  color col = sprIsom.get(vTileSize.x + vOffset.x, vOffset.y + tileHeight / 2);
 
   // Work out selected cell by transforming screen cell
   vSelected = new PVectorI
@@ -66,56 +71,57 @@ void draw(){
     {
       // Convert cell coordinate to world space
       PVectorI vWorld = ToScreen(x, y);
-      tmp = createImage(vTileSize.x, vTileSize.y, ARGB);//create a temporary image
-      int tmpY = vWorld.y;
+      //tmp = createImage(vTileSize.x, vTileSize.y * 2, ARGB);//create a temporary image
+      //int tmpY = vWorld.y;
       
-      switch(pWorld[y*vWorldSize.x + x])
-      {
-      case 0:
-        // Invisble Tile
-        //image(vWorld.x, vWorld.y, sprIsom, 1 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
-        tmp.copy(sprIsom, 1 * vTileSize.x, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
-        break;
-      case 1:
-        // Visible Tile
-        //DrawPartialSprite(vWorld.x, vWorld.y, sprIsom, 2 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
-        tmp.copy(sprIsom, 2 * vTileSize.x, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
-        break;
-      case 2:
-        // Tree
-        //DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, sprIsom, 0 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
-        tmp = createImage(vTileSize.x, vTileSize.y * 2, ARGB);
-        tmp.copy(sprIsom, 0 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, 0, 0, vTileSize.x, vTileSize.y * 2);
-        tmpY = vWorld.y - vTileSize.y;
-        break;
-      case 3:
-        // Spooky Tree
-        //DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, sprIsom, 1 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
-        tmp = createImage(vTileSize.x, vTileSize.y * 2, ARGB);
-        tmp.copy(sprIsom, 1 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, 0, 0, vTileSize.x, vTileSize.y * 2);
-        tmpY = vWorld.y - vTileSize.y;
-        break;
-      case 4:
-        // Beach
-        //DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, sprIsom, 2 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
-        tmp = createImage(vTileSize.x, vTileSize.y * 2, ARGB);
-        tmp.copy(sprIsom, 2 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, 0, 0, vTileSize.x, vTileSize.y * 2);
-        tmpY = vWorld.y - vTileSize.y;
-        break;
-      case 5:
-        // Water
-        //DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, sprIsom, 3 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
-        tmp = createImage(vTileSize.x, vTileSize.y * 2, ARGB);
-        tmp.copy(sprIsom, 3 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, 0, 0, vTileSize.x, vTileSize.y * 2);
-        tmpY = vWorld.y - vTileSize.y;
-        break;
-      }
-      image(tmp, vWorld.x, tmpY);
+      //switch(pWorld[y*vWorldSize.x + x])
+      //{
+      //case 0:
+      //  // Invisble Tile
+      //  //image(vWorld.x, vWorld.y, sprIsom, 1 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
+      //  tmp.copy(sprIsom, 1 * vTileSize.x, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
+      //  break;
+      //case 1:
+      //  // Visible Tile
+      //  //DrawPartialSprite(vWorld.x, vWorld.y, sprIsom, 2 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
+      //  tmp.copy(sprIsom, 2 * vTileSize.x, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
+      //  break;
+      //case 2:
+      //  // Tree
+      //  //DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, sprIsom, 0 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
+      //  tmp = createImage(vTileSize.x, vTileSize.y * 2, ARGB);
+      //  tmp.copy(sprIsom, 0 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, 0, 0, vTileSize.x, vTileSize.y * 2);
+      //  tmpY = vWorld.y - vTileSize.y;
+      //  break;
+      //case 3:
+      //  // Spooky Tree
+      //  //DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, sprIsom, 1 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
+      //  tmp = createImage(vTileSize.x, vTileSize.y * 2, ARGB);
+      //  tmp.copy(sprIsom, 1 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, 0, 0, vTileSize.x, vTileSize.y * 2);
+      //  tmpY = vWorld.y - vTileSize.y;
+      //  break;
+      //case 4:
+      //  // Beach
+      //  //DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, sprIsom, 2 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
+      //  tmp = createImage(vTileSize.x, vTileSize.y * 2, ARGB);
+      //  tmp.copy(sprIsom, 2 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, 0, 0, vTileSize.x, vTileSize.y * 2);
+      //  tmpY = vWorld.y - vTileSize.y;
+      //  break;
+      //case 5:
+      //  // Water
+      //  //DrawPartialSprite(vWorld.x, vWorld.y - vTileSize.y, sprIsom, 3 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2);
+      //  tmp = createImage(vTileSize.x, vTileSize.y * 2, ARGB);
+      //  tmp.copy(sprIsom, 3 * vTileSize.x, 1 * vTileSize.y, vTileSize.x, vTileSize.y * 2, 0, 0, vTileSize.x, vTileSize.y * 2);
+      //  tmpY = vWorld.y - vTileSize.y;
+      //  break;
+      //}
+      //tmpY = vWorld.y - vTileSize.y;
+      image(tiles[pWorld[y*vWorldSize.x + x] + 2], vWorld.x, vWorld.y - vTileSize.y);
       
       if(selectedBehind == true && vSelected.x == x && vSelected.y == y){
-        tmp = createImage(vTileSize.x, vTileSize.y, ARGB);
-        tmp.copy(sprIsom, 0, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
-        image(tmp, vWorld.x, vWorld.y);
+        //tmp = createImage(vTileSize.x, vTileSize.y, ARGB);
+        //tmp.copy(sprIsom, 0, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
+        image(tiles[0], vWorld.x, vWorld.y);
       }
     }
   }
@@ -129,9 +135,9 @@ void draw(){
   // Draw "highlight" tile
   //DrawPartialSprite(vSelectedWorld.x, vSelectedWorld.y, sprIsom, 0 * vTileSize.x, 0, vTileSize.x, vTileSize.y);
   if(selectedBehind == false){
-    tmp = createImage(vTileSize.x, vTileSize.y, ARGB);
-    tmp.copy(sprIsom, 0, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
-    image(tmp, vSelectedWorld.x, vSelectedWorld.y);
+    //tmp = createImage(vTileSize.x, vTileSize.y, ARGB);
+    //tmp.copy(sprIsom, 0, 0, vTileSize.x, vTileSize.y, 0, 0, vTileSize.x, vTileSize.y);
+    image(tiles[0], vSelectedWorld.x, vSelectedWorld.y - vTileSize.y);
   }
 
   // Go back to normal drawing with no expected transparency
@@ -147,6 +153,10 @@ void draw(){
   text("Selected: " + str(vSelected.x) + ", " + str(vSelected.y), 4, 30);
   
   popMatrix();
+  
+  for(int i = 0; i < tiles.length; i++){
+    image(tiles[i], tileWidth * i, 0);
+  }
 }
 
 // Labmda function to convert "world" coordinate into screen space
@@ -197,4 +207,21 @@ void mousePressed(){
       pWorld[vSelected.y * vWorldSize.x + vSelected.x] %= 6;
     }
   }
+}
+
+PImage[] splitTiles2(PImage tileMap_){
+  int cols = tileMap_.width / tileWidth;
+  int rows = tileMap_.height / tileHeight;
+  PImage[] tmpTiles = new PImage[rows * cols];
+  int total = 0;
+  for(int y = 0; y < rows; y++){//go through all tile map rows
+    for(int x = 0; x < cols; x++){//go through all tile map columns
+      PImage tmp = createImage(tileWidth, tileHeight, ARGB);//create a temporary image
+      tmp.copy(tileMap_, x * tileWidth, y * tileHeight, tileWidth, tileHeight, 0, 0, tileWidth, tileHeight);//copy the tile at this xy position
+      //tmpTiles.add(tmp);
+      tmpTiles[total] = tmp;//copy the tile to the temporary array of tiles
+      total++;//next tile
+    }
+  }
+  return tmpTiles;//gotta do this other wise processing isn't happy
 }
